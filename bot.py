@@ -140,11 +140,21 @@ async def cb_open_menu(callback: CallbackQuery):
 @dp.callback_query(F.data.startswith("cat_"))
 async def cb_category(callback: CallbackQuery):
     cat_id = int(callback.data.split("_")[1])
-    await callback.message.edit_text(
-        "😋 <b>Оберіть страву зі списку:</b>",
-        reply_markup=get_products_keyboard(cat_id),
-        parse_mode="HTML"
-    )
+    text = "😋 <b>Оберіть страву зі списку:</b>"
+    keyboard = get_products_keyboard(cat_id)
+
+    # Якщо повертаємося з перегляду піци (де було фото) — видаляємо фото і шлемо текст
+    if callback.message.photo:
+        await callback.message.delete()
+        await callback.message.answer(
+            text, reply_markup=keyboard, parse_mode="HTML"
+        )
+    else:
+        # Якщо це був звичайний текст — просто редагуємо його
+        await callback.message.edit_text(
+            text, reply_markup=keyboard, parse_mode="HTML"
+        )
+
     await callback.answer()
 
 @dp.callback_query(F.data.startswith("prod_"))
