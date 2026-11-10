@@ -3,7 +3,12 @@ import asyncio
 import logging
 import threading
 from http.server import HTTPServer, BaseHTTPRequestHandler
+from keep_alive import keep_alive
 
+# Запускаем фоновый веб-сервер
+keep_alive()
+
+# ... дальше идет ваш привычный код aiogram (dp.start_polling и т.д.)
 from aiogram import Bot, Dispatcher, F, types
 from aiogram.filters import CommandStart, Command
 from aiogram.types import (
